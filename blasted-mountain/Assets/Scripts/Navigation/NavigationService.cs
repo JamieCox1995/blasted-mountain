@@ -14,8 +14,9 @@ namespace Navigation
         private Queue<PathRequest> requestQueue = new Queue<PathRequest>();
         private PathRequest currentRequest;
 
-        private Pathfinding.Pathfinding pathfinding;
-        private NodeGrid.Grid grid;
+        private Pathfinding.Pathfinding pathfinding;                            // Reference to the pathfinding system so we can make path requests.
+        private BoxCollider collider;                                           // This collider is what the input system will raycast against.
+        private NodeGrid.Grid grid;                                             // Reference to the grid.
 
         private bool isProcessingRequest = false;
         public bool DebugGrid = false;
@@ -27,10 +28,24 @@ namespace Navigation
 
         public void Initialize()
         {
-            grid = new NodeGrid.Grid(50, 40, 1f, Vector3.zero);
+            int height = 40, width = 50;
+
+            grid = new NodeGrid.Grid(width, height, 1f, Vector3.zero);
 
             pathfinding = GetComponent<Pathfinding.Pathfinding>();
             pathfinding.Initialize();
+
+            collider = GetComponentInChildren<BoxCollider>();
+
+            if(collider == null )
+            {
+                // if there is no collider attached, create an empty child and add a box collider
+                GameObject child = new GameObject("_GridCollider", new Type[] { typeof(BoxCollider) });
+                child.transform.parent = transform;
+            };
+
+            collider.size = new Vector3(width, 0f, height);
+            collider.center = new Vector3(width / 2f - 0.5f, 0f, height / 2f - 0.5f);
         }
 
         public static void RequestPath(Vector3 _PathStart, Vector3 _PathEnd, Action<Vector3[], bool> _Callback)
