@@ -4,6 +4,8 @@ using Navigation.NodeGrid;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Events;
+using Navigation.Pathfinding;
 
 public class TestScript : MonoBehaviour
 {
@@ -19,6 +21,9 @@ public class TestScript : MonoBehaviour
     private void Start()
     {
         grid = Navigation.NodeGrid.Grid.Instance;
+
+
+        InputService.onMouseLeftClick += OnLeftMouseClicked;
     }
 
     // Update is called once per frame
@@ -37,12 +42,12 @@ public class TestScript : MonoBehaviour
         //}
     }
 
-    public void OnPathFound(Vector3[] _Path, bool _Success)
+    public void OnPathFound(PathRequestResult _Result)
     {
-        if(_Success)
+        if(_Result.Success)
         {
             foundPath = true;
-            path = _Path;
+            path = _Result.Path;
         }
     }
 
@@ -55,5 +60,12 @@ public class TestScript : MonoBehaviour
                 Gizmos.DrawLine(path[index] + offset, path[index + 1] + offset);
             }
         }
+    }
+
+    public void OnLeftMouseClicked(MouseClickEventData _EventData)
+    {
+        if (_EventData.ClickedObject == null) return;
+
+        Debug.Log(_EventData.ClickedObject.name);
     }
 }

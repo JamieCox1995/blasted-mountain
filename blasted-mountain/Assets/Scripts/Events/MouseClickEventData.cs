@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MouseClickEventData
+namespace Events
 {
-    public Vector3 worldPosition;
+    public class MouseClickEventData
+    {
+        public Vector2 MousePosition;
+        public Vector3 WorldPosition;
 
-    public GameObject clickedObject;
+        public GameObject ClickedObject;
+    }
 }
+

@@ -6,11 +6,29 @@ using System.Linq;
 
 namespace Combat
 {
-    public class CombatantGroup : MonoBehaviour
+    [System.Serializable]
+    public class CombatantGroup
     {
         // We are using a dictionary to keep track of all of the units attached to this group (key), and if they have activated (value) 
-        private Dictionary<Unit, bool> units = new Dictionary<Unit, bool>();
-        private int allegiance = -1;
+        private Dictionary<Unit, bool> units;
+        private int allegiance;
+
+        public CombatantGroup()
+        {
+            units = new Dictionary<Unit, bool>();
+            allegiance = -1;
+        }
+
+        public CombatantGroup(int _Allegiance)
+        {
+            units = new Dictionary<Unit, bool>();
+            allegiance = _Allegiance;
+        }
+
+        public void AddUnit(Unit unit) 
+        { 
+            units.Add(unit, false);
+        }
 
         public int GetUnitCount()
         {

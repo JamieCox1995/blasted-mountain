@@ -48,7 +48,7 @@ namespace Navigation
             collider.center = new Vector3(width / 2f - 0.5f, 0f, height / 2f - 0.5f);
         }
 
-        public static void RequestPath(Vector3 _PathStart, Vector3 _PathEnd, Action<Vector3[], bool> _Callback)
+        public static void RequestPath(Vector3 _PathStart, Vector3 _PathEnd, Action<PathRequestResult> _Callback)
         {
             PathRequest request = new PathRequest(_PathStart, _PathEnd, _Callback);
 
@@ -69,9 +69,9 @@ namespace Navigation
             pathfinding.FindPath(currentRequest.PathStart, currentRequest.PathEnd);
         }
 
-        public void FinishProcessingRequest(Vector3[] _Path, bool _Success)
+        public void FinishProcessingRequest(PathRequestResult _Result)
         {
-            currentRequest.PathFoundCallback(_Path, _Success);
+            currentRequest.PathFoundCallback(_Result);
             isProcessingRequest = false;
 
             ProcessNextRequest();
@@ -112,7 +112,7 @@ namespace Navigation
         {
             if(DebugGrid)
             {
-                if (grid == null) return;
+                if (grid == null || grid.GetCells() == null) return;
 
                 // we want to go over all of the cells in the Grid and draw a cube
                 foreach (Node node in grid.GetCells())
@@ -120,7 +120,7 @@ namespace Navigation
                     //Gizmos.color = Color.Lerp(Color.white, Color.black, Mathf.InverseLerp(penaltyMin, penaltyMax, n.movementPenalty));
                     Gizmos.color = Color.black;
                     Gizmos.color = (node.IsWalkable) ? Gizmos.color : Color.red;
-                    Gizmos.DrawWireCube(new Vector3(node.WorldPosition.x - 0.5f, 0f, node.WorldPosition.z - 0.5f), new Vector3(1f, 0f, 1f));
+                    Gizmos.DrawWireCube(new Vector3(node.WorldPosition.x, 0f, node.WorldPosition.z), new Vector3(1f, 0f, 1f));
                 }
             }
         }
